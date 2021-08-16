@@ -15,7 +15,7 @@
 #                                                                              #
 ################################################################################
 
-declare -a required_packages=("wget" "tar" "make" "gcc" "g++")
+declare -a required_packages=("wget" "tar" "make" "gcc" "g++" "libssl-dev")
 UPDATED=0
 for pkg in ${required_packages[@]}; do
     echo -n "Checking for ${pkg} ..."
@@ -103,10 +103,11 @@ for version in "${CMAKE_VERSIONS[@]}"; do
             make -j"$(nproc)" install
 
             ALT_PRIO=$(echo "$version" | sed 's/\.//g')
+            CMAKE_BINARY_SYMLINK_DIR="/usr/local/bin"
             update-alternatives --force \
-            --install /usr/bin/cmake cmake "${CURRENT_CMAKE_VERSION_INSTALL_DIR}"/bin/cmake "${ALT_PRIO}" \
-            --slave   /usr/bin/ctest ctest "${CURRENT_CMAKE_VERSION_INSTALL_DIR}"/bin/ctest \
-            --slave   /usr/bin/cpack cpack "${CURRENT_CMAKE_VERSION_INSTALL_DIR}"/bin/cpack
+            --install ${CMAKE_BINARY_SYMLINK_DIR}/cmake cmake "${CURRENT_CMAKE_VERSION_INSTALL_DIR}"/bin/cmake "${ALT_PRIO}" \
+            --slave   ${CMAKE_BINARY_SYMLINK_DIR}/ctest ctest "${CURRENT_CMAKE_VERSION_INSTALL_DIR}"/bin/ctest \
+            --slave   ${CMAKE_BINARY_SYMLINK_DIR}/cpack cpack "${CURRENT_CMAKE_VERSION_INSTALL_DIR}"/bin/cpack
             popd > /dev/null # leave BUILD_FOLDER/cmake-${version}
         fi
     else 
