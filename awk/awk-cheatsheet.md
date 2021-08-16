@@ -355,14 +355,14 @@ awk '{sub(/^/, "     ")};1'
 ## align all text flush right on a 79-column width
 
 ```
-awk '{printf "%79s\n", $0}' file*
+awk '{printf "%79s\n", $0}' file
 ```
 
 
 ## center all text on a 79-character width
 
 ```
-awk '{l=length();s=int((79-l)/2); printf "%"(s+l)"s\n",$0}' file*
+awk '{l=length();s=int((79-l)/2); printf "%"(s+l)"s\n",$0}' file
 ```
 
 
@@ -397,14 +397,14 @@ awk '{gsub(/scarlet|ruby|puce/, "red")}; 1'
 ## reverse order of lines (emulates "tac")
 
 ```
-awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }' file*
+awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }' file
 ```
 
 ## if a line ends with a backslash, append the next line to it (fails if there are multiple lines ending with backslash...)
 
 
 ```
-awk '/\\$/ {sub(/\\$/,""); getline t; print $0 t; next}; 1' file*
+awk '/\\$/ {sub(/\\$/,""); getline t; print $0 t; next}; 1' file
 ```
 
 ## print and sort the login names of all users
