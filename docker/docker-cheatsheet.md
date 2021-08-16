@@ -1,4 +1,15 @@
 
+# Change permissions to allow docker use without sudo
+
+$ sudo groupadd docker
+$ sudousermod -aG docker $(whoami)
+$ sudo reboot
+
+
+# Configure docker to start on boot
+
+$ sudo systemctl enable docker.service
+$ sudo systemctl enable containerd.service
 
 # apt-get update doesn't work from inside dockerfile
 
