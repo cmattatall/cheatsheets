@@ -1,5 +1,10 @@
 
 
+# Openssl issues when building cmake from source
+
+You need libssl
+$ sudo apt install libssl-dev
+
 
 # Embed git hash in cmake
 
