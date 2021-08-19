@@ -26,3 +26,21 @@ restart the docker daemon.
 
 $sudo systemctl restart docker.server OR $sudo service docker restart OR just
 restart your machine
+
+# Docker can't seem to find packages (apt, apk, pacman, etc)
+
+1. Confirm network connectivity
+2. Confirm docker image network settings (especially if using docker-compose)
+3. Check if /etc/docker/daemon.json exists. If exists, make sure DNS servers are valid
+4. Restart the docker daemon using
+
+- $ sudo systemctl restart docker.service 
+- Restart your machine
+- Manually kill the processes associated with docker and use systemd to relaunch docker.
+
+
+
+Assuming the package exists for the correct version, and
+that your docker network settings are configured correctly,
+and that you have 
+
