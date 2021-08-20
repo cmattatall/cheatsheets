@@ -96,6 +96,16 @@ done
 ```
 
 
+# Variables
+
+## Check if a variable is empty
+
+```
+unset MY_VAR
+[ -z "${MY_VAR}" ] && echo "MY_VAR is not set"
+```
+
+
 # Commands
 
 
