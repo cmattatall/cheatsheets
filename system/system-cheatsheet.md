@@ -1,5 +1,5 @@
 
-# Timezone is incorrect
+## System time is incorrect or out of sync
 
 There may be many causes of this so it is hard to make 
 a comprehensive guide on this. As a quick fix, we can do
@@ -57,3 +57,25 @@ sudo service ntp start
 
 In the above command, the -gq flags tells the ntp daemon to correct the time
 regardless of the offset (g) and exit immediately (q) after setting the time.
+
+
+## Examples of using update-alternatives
+
+### Create symbolic link called cmake in /usr/bin that points to /usr/local/cmake/cmake-3.16/bin/cmake and is part of the cmake link group
+					
+```
+$ sudo update-alternatives --install          \
+	/usr/bin/cmake 	                      \
+	cmake                                 \
+	/usr/local/cmake/cmake-3.16/bin/cmake \
+	316
+```
+
+### Create symbolic link with a child alternative that changes when the main alternative does
+
+```
+$ sudo update-alternatives                          \
+  --install /usr/bin/gcc gcc /usr/local/bin/gcc-7 7 \
+  --slave   /usr/bin/g++ g++ /usr/local/bin/g++-7   
+```
+
