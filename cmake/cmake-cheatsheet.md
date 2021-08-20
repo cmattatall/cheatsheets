@@ -3,21 +3,25 @@
 # Openssl issues when building cmake from source
 
 You need libssl
+```
 $ sudo apt install libssl-dev
-
+```
 
 # Embed git hash in cmake
 
 # Get the latest abbreviated commit hash of the working branch
     
-
+```
 execute_process(COMMAND git log --pretty=format:'%h' -n 1
                 OUTPUT_VARIABLE GIT_REV
                 ERROR_QUIET)
+```
 
 # Check whether we got any revision (which isn't
 # always the case, e.g. when someone downloaded a zip
 # file from Github instead of a checkout)
+
+```
 if ("${GIT_REV}" STREQUAL "")
     set(GIT_REV "N/A")
     set(GIT_DIFF "")
@@ -55,12 +59,14 @@ if (NOT "${VERSION}" STREQUAL "${VERSION_}")
     file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/version.cpp "${VERSION}")
 endif()
 
-
+```
 
 # Add a custom command that produces version.cpp, plus
 # a dummy output that's not actually produced, in order
 # to force version.cmake to always be re-run before the build
-ADD_CUSTOM_COMMAND(
+
+```
+add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/version.cpp
            ${CMAKE_CURRENT_BINARY_DIR}/_version.cpp
     COMMAND ${CMAKE_COMMAND} -P
@@ -95,9 +101,11 @@ const char* libfive_git_branch(void)
 {
     return GIT_BRANCH;
 }
-
+```
 
 # The oldschool way off attaching the git hash to a cmake target 
+
+```
 execute_process(
     COMMAND git log -1 --format=%h
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
@@ -108,6 +116,6 @@ execute_process(
 target_compile_definitions(my-target-name PUBLIC ${GIT_HASH})
 
 
-
+```
 
 
