@@ -1,0 +1,51 @@
+#!/bin/bash
+#
+# Bash script to setup update-alternatives for a manual install of arm-none-eabi-gcc 
+# toolchain. NOT MEANT TO BE USED ON THE BINARIES FROM THE PACKAGE MANAGER
+#
+# Downloads can be found at
+# https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
+
+BINUTILS_LINK_DIR="/usr/local/bin"
+BINUTILS_DIR="/opt/cross/gcc-arm-none-eabi-10.3-2021.07/bin"
+
+
+if [ ! -d "${BINUTILS_LINK_DIR}" ]; then
+    mkdir -p "${BINUTILS_LINK_DIR}"
+fi
+
+update-alternatives \
+    --install "${BINUTILS_LINK_DIR}"/arm-none-eabi-gcc                  arm-none-eabi-gcc                   "${BINUTILS_DIR}"/arm-none-eabi-gcc             2021 \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-addr2line            arm-none-eabi-addr2line             "${BINUTILS_DIR}"/arm-none-eabi-addr2line \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-c++filt              arm-none-eabi-c++filt               "${BINUTILS_DIR}"/arm-none-eabi-c++filt \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-gcc-ranlib           arm-none-eabi-gcc-ranlib            "${BINUTILS_DIR}"/arm-none-eabi-gcc-ranlib \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-gdb                  arm-none-eabi-gdb                   "${BINUTILS_DIR}"/arm-none-eabi-gdb \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-gprof                arm-none-eabi-gprof                 "${BINUTILS_DIR}"/arm-none-eabi-gprof \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-nm                   arm-none-eabi-nm                    "${BINUTILS_DIR}"/arm-none-eabi-nm \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-readelf              arm-none-eabi-readelf               "${BINUTILS_DIR}"/arm-none-eabi-readelf \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-ar                   arm-none-eabi-ar                    "${BINUTILS_DIR}"/arm-none-eabi-ar \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-cpp                  arm-none-eabi-cpp                   "${BINUTILS_DIR}"/arm-none-eabi-cpp \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-gcc-10.3.1           arm-none-eabi-gcc-10.3.1            "${BINUTILS_DIR}"/arm-none-eabi-gcc-10.3.1 \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-gcov                 arm-none-eabi-gcov                  "${BINUTILS_DIR}"/arm-none-eabi-gcov \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-gdb-add-index        arm-none-eabi-gdb-add-index         "${BINUTILS_DIR}"/arm-none-eabi-gdb-add-index \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-ld                   arm-none-eabi-ld                    "${BINUTILS_DIR}"/arm-none-eabi-ld \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-objcopy              arm-none-eabi-objcopy               "${BINUTILS_DIR}"/arm-none-eabi-objcopy \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-size                 arm-none-eabi-size                  "${BINUTILS_DIR}"/arm-none-eabi-size \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-as                   arm-none-eabi-as                    "${BINUTILS_DIR}"/arm-none-eabi-as \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-elfedit              arm-none-eabi-elfedit               "${BINUTILS_DIR}"/arm-none-eabi-elfedit \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-gcc-ar               arm-none-eabi-gcc-ar                "${BINUTILS_DIR}"/arm-none-eabi-gcc-ar \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-gcov-dump            arm-none-eabi-gcov-dump             "${BINUTILS_DIR}"/arm-none-eabi-gcov-dump \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-gdb-add-index-py     arm-none-eabi-gdb-add-index-py      "${BINUTILS_DIR}"/arm-none-eabi-gdb-add-index-py \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-ld.bfd               arm-none-eabi-ld.bfd                "${BINUTILS_DIR}"/arm-none-eabi-ld.bfd \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-objdump              arm-none-eabi-objdump               "${BINUTILS_DIR}"/arm-none-eabi-objdump \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-strings              arm-none-eabi-strings               "${BINUTILS_DIR}"/arm-none-eabi-strings \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-c++                  arm-none-eabi-c++                   "${BINUTILS_DIR}"/arm-none-eabi-c++ \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-g++                  arm-none-eabi-g++                   "${BINUTILS_DIR}"/arm-none-eabi-g++ \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-gcc-nm               arm-none-eabi-gcc-nm                "${BINUTILS_DIR}"/arm-none-eabi-gcc-nm \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-gcov-tool            arm-none-eabi-gcov-tool             "${BINUTILS_DIR}"/arm-none-eabi-gcov-tool \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-gdb-py               arm-none-eabi-gdb-py                "${BINUTILS_DIR}"/arm-none-eabi-gdb-py \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-lto-dump             arm-none-eabi-lto-dump              "${BINUTILS_DIR}"/arm-none-eabi-lto-dump \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-ranlib               arm-none-eabi-ranlib                "${BINUTILS_DIR}"/arm-none-eabi-ranlib \
+    --slave   "${BINUTILS_LINK_DIR}"/arm-none-eabi-strip                arm-none-eabi-strip                 "${BINUTILS_DIR}"/arm-none-eabi-str
+
+
