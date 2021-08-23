@@ -6,6 +6,9 @@
 # Downloads can be found at
 # https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
 
+# Download the tarball
+# wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.07/gcc-arm-none-eabi-10.3-2021.07-x86_64-linux.tar.bz2
+
 BINUTILS_LINK_DIR="/usr/local/bin"
 BINUTILS_DIR="/opt/cross/gcc-arm-none-eabi-10.3-2021.07/bin"
 
