@@ -1,6 +1,6 @@
-# Docker file to build the cloud comms plugin
+# Docker file to build gcc + glibc toolchain for a customized or legacy ABI from source
 #
-# Current cross toolhains:
+# Current cross configuration toolhains:
 # - armv5tej (fpu=vfpv2, float-abi=hard, libc=glibc)
 #
 # TOOLCHAIN FILE STRUCTURE:
@@ -363,55 +363,7 @@ WORKDIR ../
 RUN rm ./jsoncpp
 WORKDIR /work
 
-# Standalone examples to test network connection, certs, etc, with MQTT
-COPY standalone ./standalone
-WORKDIR ./standalone
-RUN mkdir -p build
-WORKDIR ./build
-RUN cmake ../ \
-    -DCMAKE_TOOLCHAIN_FILE=/work/toolchain.cmake \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=${PROJECT_STAGING_DIR}
-RUN make -j$(nproc)
-WORKDIR /work
 
-
-# Build mabel-abi 
-# You must clone/wget/curl/magically-download mabel-abi from nautel repository
-# and put it inside a directory called "docker-imports"
-#
-# This is because docker network permissions are sandboxed and it is a pain 
-# to get a double NAT -> double PAT working from within a docker container 
-# while tunnelled into Rimot's VPN while ALSO tunnelled into Nautel's VPN.
-COPY docker-imports/mabel-abi /work/mabel-abi
-WORKDIR /work/mabel-abi
-RUN if [ -d build ]; then rm -rf build; fi && mkdir -p ./build
-WORKDIR ./build
-RUN cmake ../ \
-    -DCMAKE_TOOLCHAIN_FILE=/work/toolchain.cmake \
-    -DCMAKE_INSTALL_PREFIX=${TOOLCHAIN_USR_DIR} \
-    -DPRODUCTION=ON \
-    -DCMAKE_CXX_STANDARD=17
-RUN make -j$(nproc) && make install
-RUN rm /etc/ld.so.conf.d/mabelabi.conf && \
-    echo "${TOOLCHAIN_USR_DIR}/lib/mabelabi" > /etc/ld.so.conf.d/mabelabi.conf && \
-    ldconfig
-WORKDIR /work/mabel-abi
-
-# Build cloudcommsplugin
-RUN mkdir /cloudcommplugin
-WORKDIR /cloudcommplugin
-COPY . .
-RUN mkdir ./build
-WORKDIR ./build
-RUN cmake ../ \
-    -DCMAKE_TOOLCHAIN_FILE=/work/toolchain.cmake \
-    -DCMAKE_VERBOSE_MAKEFILE=ON \
-    -DPRODUCTION=ON \
-    -DCMAKE_CXX_STANDARD=17
-RUN make -j$(nproc) 
-RUN cpack 
-WORKDIR /work
 
 
 
