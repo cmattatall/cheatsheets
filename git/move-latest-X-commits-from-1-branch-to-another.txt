@@ -1,0 +1,59 @@
+
+# Examples
+
+Move the latest 3 commits to a branch called "newbranch"
+```sh
+git reset --keep HEAD~3
+git checkout -t -b newbranch
+git cherry-pick ..HEAD@{2}
+```
+
+First it discards the 3 most recent commits (--keep is like --hard, but safer, as fails rather than throw away uncommitted changes).
+Then it forks off newbranch.
+Then it cherry-picks those 3 commits back onto newbranch. Since they're no longer referenced by a branch, it does that by using git's reflog: HEAD@{2} is the commit that HEAD used to refer to 2 operations ago, i.e. before we 1. checked out newbranch and 2. used git reset to discard the 3 commits.
+Warning: the reflog is enabled by default, but if you've manually disabled it (e.g. by using a "bare" git repository), you won't be able to get the 3 commits back after running git reset --keep HEAD~3.
+
+An alternative that doesn't rely on the reflog is:
+
+```sh
+# newbranch will omit the 3 most recent commits.
+git checkout -b newbranch HEAD~3
+git branch --set-upstream-to=oldbranch
+
+# Cherry-picks the extra commits from oldbranch.
+git cherry-pick ..oldbranch
+# Discards the 3 most recent commits from oldbranch.
+git branch --force oldbranch oldbranch~3
+#(if you prefer you can write @{-1} - the previously checked out branch - instead of oldbranch).
+```
+
+# Technical explanation
+Why would git rebase discard the 3 commits after the first example? It's because git rebase with no arguments enables the --fork-point option by default, which uses the local reflog to try to be robust against the upstream branch being force-pushed.
+
+Suppose you branched off origin/master when it contained commits M1, M2, M3, then made three commits yourself:
+
+M1--M2--M3  <-- origin/master
+         \
+          T1--T2--T3  <-- topic
+but then someone rewrites history by force-pushing origin/master to remove M2:
+
+M1--M3'  <-- origin/master
+ \
+  M2--M3--T1--T2--T3  <-- topic
+Using your local reflog, git rebase can see that you forked from an earlier incarnation of the origin/master branch, and hence that the M2 and M3 commits are not really part of your topic branch. Hence it reasonably assumes that since M2 was removed from the upstream branch, you no longer want it in your topic branch either once the topic branch is rebased:
+
+M1--M3'  <-- origin/master
+     \
+      T1'--T2'--T3'  <-- topic (rebased)
+This behavior makes sense, and is generally the right thing to do when rebasing.
+
+So the reason that the following commands fail:
+
+git branch -t newbranch
+git reset --hard HEAD~3
+git checkout newbranch
+is because they leave the reflog in the wrong state. Git sees newbranch as having forked off the upstream branch at a revision that includes the 3 commits, then the reset --hard rewrites the upstream's history to remove the commits, and so next time you run git rebase it discards them like any other commit that has been removed from the upstream.
+
+But in this particular case we want those 3 commits to be considered as part of the topic branch. To achieve that, we need to fork off the upstream at the earlier revision that doesn't include the 3 commits. That's what my suggested solutions do, hence they both leave the reflog in the correct state.
+
+For more details, see the definition of --fork-point in the git rebase and git merge-base docs.
