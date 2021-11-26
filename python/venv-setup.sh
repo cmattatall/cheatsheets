@@ -39,7 +39,7 @@ function cdk_python_env_init() {
         which cdk > /dev/null
         if [ "$?" -eq "0" ]; then
             $(which cdk) init app --language python
-            source venv/bin/activate
+            source .venv/bin/activate
             if [ -f requirements.txt ]; then
                 python -m pip install -r requirements.txt
                 if [ "$?" -eq "0" ]; then
