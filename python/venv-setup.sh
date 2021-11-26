@@ -37,6 +37,3 @@ function cdk_python_env_init() {
   fi
 }
 
-alias cdk_init="cdk_python_env_init"
-alias pyenv_init="python_env_init"
-
