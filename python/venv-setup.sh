@@ -2,7 +2,6 @@
 # Add this to your bashrc
 
 function python_env_init() {
-    set +e
     dpkg --list | grep env | grep virtual | grep python | awk '{print $2}' > /dev/null
     if [ "$?" -eq "0" ]; then
         which virtualenv
@@ -26,7 +25,6 @@ function python_env_init() {
     else
         echo "python3-virtualenv does not seem to be installed. Please install it first"
     fi
-    set -e
 }
 
 
