@@ -14,3 +14,13 @@ And if a mistake is made:
 ```sh
 git rebase --abort
 ```
+
+
+# Revert Last Commit
+
+
+```sh
+git rebase -i HEAD^^
+```
+
+
