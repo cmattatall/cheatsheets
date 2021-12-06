@@ -1,0 +1,9 @@
+1. Install direnv
+
+2. Put an .envrc and a requirements.txt in your directory.
+
+3. Add the following contents to the .envrc file:
+      
+      layout python3
+      pip install -r requirements.txt
+
