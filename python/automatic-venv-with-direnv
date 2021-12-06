@@ -7,4 +7,8 @@
 layout python3
 pip install -r requirements.txt
 layout python3
+[ -f .gitignore ] && cat .gitignore | grep "^\.direnv$" > /dev/null || echo -en "\n.direnv" >> .gitignore
+[ -f .gitignore ] && cat .gitignore | grep "^\.direnv/$" > /dev/null || echo -en "\n#direnv stuff\n.direnv/" >> .gitignore
+[ -f .gitignore ] && cat .gitignore | grep "^\.direnv/\*$" > /dev/null || echo -en "\n.direnv/*" >> .gitignore
+
 
