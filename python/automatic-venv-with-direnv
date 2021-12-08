@@ -6,6 +6,19 @@
 
 layout python3
 [ -f requirements.txt ] && pip install -r requirements.txt
-[ -f .gitignore ] && cat .gitignore | grep "^\.direnv$" > /dev/null || echo -en "\n#direnv stuff\n.direnv" >> .gitignore
-[ -f .gitignore ] && cat .gitignore | grep "^\.direnv/$" > /dev/null || echo -en "\n.direnv/" >> .gitignore
-[ -f .gitignore ] && cat .gitignore | grep "^\.direnv/\*$" > /dev/null || echo -en "\n.direnv/*" >> .gitignore
+if [ -f .gitignore ]; then
+    cat .gitignore | grep "^\.direnv$" > /dev/null
+    if [ "$?" -ne "0" ]; then
+        echo -en "\n#direnv stuff\n.direnv" >> .gitignore
+    fi
+
+    cat .gitignore | grep "^\.direnv/$" > /dev/null
+    if [ "$?" -ne "0" ]; then
+        echo -en "\n.direnv/" >> .gitignore
+    fi
+
+    cat .gitignore | grep "^\.direnv/\*$" > /dev/null
+    if [ "$?" -ne "0" ]; then
+        echo -en "\n.direnv/*" >> .gitignore
+    fi
+fi
