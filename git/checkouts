@@ -8,5 +8,5 @@ git log --reverse --pretty=%H master | grep -A 1 $(git rev-parse HEAD) | tail -n
 # CHECKOUT 1 COMMIT BACKWARDS
 
 ```sh
-git checkout HEAD^^
+git checkout HEAD^
 ```
