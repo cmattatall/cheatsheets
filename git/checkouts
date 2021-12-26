@@ -1,8 +1,23 @@
 
 # CHECKOUT 1 COMMIT FORWARD
 
+
+NOTE THAT SINCE "branches" are just pointers to commits,
+going back 1 commit and then forward 1 commit from a "branch" will NOT return you to that branch
+it will return you to the commit that is EQUAL to that branch.
+
+In theory you could write a function that uses git branch --points-at <BRANCH NAME> to loop
+across all the local branches and determine if the current commit is actually identical to
+a branch head, and if that is the case, checkout the branch HEAD rather than the commit object
+itself - but that is too much pain for me and there is little ROI if you have a reasonable
+understanding of how git works internally.
+
 ```sh
-git log --reverse --pretty=%H master | grep -A 1 $(git rev-parse HEAD) | tail -n1 | xargs git checkout
+git log --reverse --pretty=%H master \
+  | grep -A 1 $(git rev-parse HEAD) \
+  | tail -n1 \
+  | xargs git checkout
+
 ```
 
 # CHECKOUT 1 COMMIT BACKWARDS
