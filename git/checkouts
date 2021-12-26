@@ -1,0 +1,12 @@
+
+# CHECKOUT 1 COMMIT FORWARD
+
+```sh
+git checkout HEAD@{1}
+```
+
+# CHECKOUT 1 COMMIT BACKWARDS
+
+```sh
+git checkout HEAD^^
+```
