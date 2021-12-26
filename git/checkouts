@@ -2,7 +2,7 @@
 # CHECKOUT 1 COMMIT FORWARD
 
 ```sh
-git checkout HEAD@{1}
+git log --reverse --pretty=%H master | grep -A 1 $(git rev-parse HEAD) | tail -n1 | xargs git checkout
 ```
 
 # CHECKOUT 1 COMMIT BACKWARDS
