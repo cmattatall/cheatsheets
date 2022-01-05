@@ -44,3 +44,9 @@ Assuming the package exists for the correct version, and
 that your docker network settings are configured correctly,
 and that you have 
 
+
+# Kill all active containers
+
+```sh
+docker container kill $(docker ps -q)
+```
