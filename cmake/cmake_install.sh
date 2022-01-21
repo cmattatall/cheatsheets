@@ -291,8 +291,8 @@ function symlink_cmake_version () {
         local ALT_PRIO=$(echo "$version" | sed 's/\.//g')
         update-alternatives --force \
         --install ${CMAKE_BIN_LINK_PATH}/cmake cmake "${CURRENT_CMAKE_EXE_PATH}" "${ALT_PRIO}" \
-        --slave   ${CMAKE_BIN_LINK_PATH}/ctest ctest "${CURRENT_CPACK_EXE_PATH}" \
-        --slave   ${CMAKE_BIN_LINK_PATH}/cpack cpack "${CURRENT_CTEST_EXE_PATH}"
+	--slave   ${CMAKE_BIN_LINK_PATH}/ctest ctest "${CURRENT_CTEST_EXE_PATH}" \
+        --slave   ${CMAKE_BIN_LINK_PATH}/cpack cpack "${CURRENT_CPACK_EXE_PATH}"
 
         if [ "$?" -ne 0 ]; then
             echo "Error configuring update-alternatives for cmake ${version}"
