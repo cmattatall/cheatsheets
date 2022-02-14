@@ -5,7 +5,7 @@
 3. Add the following contents to the .envrc file:
 
 layout python3
-[ -f requirements.txt ] && pip install -r requirements.txt
+[ -f requirements.txt ] && pip install -r requirements.txt --no-cache-dir --verbose --require-virtualenv
 if [ -f .gitignore ]; then
     cat .gitignore | grep "^\.direnv$" > /dev/null
     if [ "$?" -ne "0" ]; then
