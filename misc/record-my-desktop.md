@@ -7,13 +7,12 @@
 apt-get update && apt-get install -y recordmydesktop
 ```
 
-# Record your entire screen
-
+# Record your entire screen (and end the recording with CTRL+C)
 ```sh
 recordmydesktop --on-the-fly-encoding
 ```
 
-# Record a specific window
+# Record a specific window (and end the recording with CTRL+C)
 This will allow you to first select the window with a mouse click, and it starts recording after you click.
 ```sh
 recordmydesktop --windowid `xwininfo | grep 'id: 0x' | grep -Eo '0x[a-z0-9]+'`
