@@ -14,13 +14,21 @@ Requires=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/bin/bash my_command_to_start_my_service._It_doesnt_have_to_be_a_shell_script._it_can_be_other_commands_too
-ExecStop=/bin/bash my_command_to_stop_my_service._It_doesnt_have_to_be_a_shell_script._it_can_be_other_commands_too
-ExecRestart=/bin/bash my_command_to_restart_my_service._It_doesnt_have_to_be_a_shell_script._it_can_be_other_commands_too
+ExecStart=/bin/bash -c 'my_command_to_start_my_service._It_doesnt_have_to_be_a_shell_script._it_can_be_other_commands_too'
+ExecStop=/bin/bash -c 'my_command_to_stop_my_service._It_doesnt_have_to_be_a_shell_script._it_can_be_other_commands_too'
+ExecRestart=/bin/bash -c 'my_command_to_restart_my_service._It_doesnt_have_to_be_a_shell_script._it_can_be_other_commands_too'
+
+# If you don't use the $SHELL -c 'COMMAND_GOES_HERE' construct, you will need the commands to be a single script
+# Example:
+# ExecStart=/usr/local/bin/my_script.sh
 
 Restart=on-failure
-StandardOutput=file:/path/to/my/standard_output_logfile.log
-StandardError=file:/path/to/my/standard_error_logfile.log
+
+# DON'T USE StandardOutput or StandardError unless you absolutely have to. 
+# It is better to use stream redirection. 
+# Especially if you will be modifying, adding, mounting or unmounting the memory / files that are being written.
+#StandardOutput=file:/path/to/my/standard_output_logfile.log
+#StandardError=file:/path/to/my/standard_error_logfile.log
 
 [Install]
 WantedBy=multi-user.target
