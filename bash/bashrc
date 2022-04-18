@@ -116,18 +116,23 @@ alias python="python3"
 
 which direnv > /dev/null
 if [ "$?" -eq "0" ]; then
-    #echo "direnv is installed!"
+    # direnv is installed. Hook into shell
     eval "$(direnv hook bash)"
+else
+    echo "Not hooking direnv into shell. direnv not installed."
 fi
 
+
+
+# FZF stuff
 which fzf > /dev/null
 if [ "$?" -eq "0" ]; then
-    #echo "fzf is installed"!
     FZF_KEYBINDINGS=$(dpkg -L fzf | grep bindings | grep $(basename $(realpath $SHELL)))
     if [ -f "$FZF_KEYBINDINGS" ]; then
-	. $FZF_KEYBINDINGS
-    
+	    source $FZF_KEYBINDINGS
     fi
+else
+  echo "fzf not installed"
 fi
 
 
