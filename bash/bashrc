@@ -127,10 +127,16 @@ fi
 # FZF stuff
 which fzf > /dev/null
 if [ "$?" -eq "0" ]; then
-    FZF_KEYBINDINGS=$(dpkg -L fzf | grep bindings | grep $(basename $(realpath $SHELL)))
-    if [ -f "$FZF_KEYBINDINGS" ]; then
-	    source $FZF_KEYBINDINGS
-    fi
+  if [ -f ~/.fzf.bash ]; then
+    source ~/.fzf.bash
+  else
+    echo "fzf is installed but could not find ~/.fzf.bash file."
+    echo "Could not configure fzf keybindings"
+  fi
+#    FZF_KEYBINDINGS=$(dpkg -L fzf | grep bindings | grep $(basename $(realpath $SHELL)))
+#    if [ -f "$FZF_KEYBINDINGS" ]; then
+#	    source $FZF_KEYBINDINGS
+#    fi
 else
   echo "fzf not installed"
 fi
