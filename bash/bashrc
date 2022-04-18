@@ -126,9 +126,10 @@ fi
 
 # FZF stuff
 which fzf > /dev/null
+FZF_RC="$HOME/.fzf.bash"
 if [ "$?" -eq "0" ]; then
-  if [ -f ~/.fzf.bash ]; then
-    source ~/.fzf.bash
+  if [ -f "$FZF_RC" ]; then
+    source "$FZF_RC"
   else
     echo "fzf is installed but could not find ~/.fzf.bash file."
     echo "Could not configure fzf keybindings"
@@ -140,7 +141,7 @@ if [ "$?" -eq "0" ]; then
 else
   echo "fzf not installed"
 fi
-
+unset FZF_RC
 
 
 ##GIT related configuration
