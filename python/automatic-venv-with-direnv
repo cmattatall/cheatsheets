@@ -31,6 +31,11 @@ if [ -f setup.py ]; then
 else
   if [ -f requirements.txt ]; then
     echo "Setting up project/environment from requirements.txt"
-    pip install -r requirements.txt --no-cache-dir --verbose --require-virtualenv
+    python3 -m pip install -r requirements.txt --no-cache-dir --verbose --require-virtualenv
   fi
+fi
+
+
+if [ -f .env ]; then
+    export $(grep -v '^#' .env | xargs)
 fi
