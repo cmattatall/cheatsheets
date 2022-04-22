@@ -168,4 +168,4 @@ which xclip > /dev/null
 if [ "$?" -eq "0" ]; then
 	alias clipboard="xclip -selection clipboard"
 fi
-alias clipboard
+
