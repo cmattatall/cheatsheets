@@ -1,6 +1,14 @@
 #!/bin/bash
 # Bash script to initialize a python project complete with setup.py
 
+function make_python_module() {
+        local MODULE_PATH=${1:?"ERROR: no value specified for \$1 (MODULE_PATH)"}
+        mkdir -p "$MODULE_PATH" > /dev/null
+        pushd $MODULE_PATH
+            touch __init__.py
+            echo -e "\n\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()" > __main__.py
+        popd > /dev/null
+}
 
 MODULES=()
 
@@ -12,17 +20,14 @@ touch README.md
 
 
 
+# Set up license file
 cat << EOF > "LICENSE" 
 Copyright (C) 2021 Rimot.io, Inc - All Rights Reserved
 Unauthorized copying, modifying, and/or distribution of this file, via any medium is strictly prohibited
 Proprietary and confidential
 EOF
 
-mkdir "$TEST_MODULE_NAME"
-
-
-
-
+# Set up dockerignore
 cat << EOF > ".dockerignore"
 .git/
 
@@ -43,6 +48,7 @@ docs/_build
 EOF
 
 
+# Set up gitignore
 cat << EOF > ".gitignore"
 # These are some examples of commonly ignored file patterns.
 # You should customize this list as applicable to your project.
@@ -283,7 +289,7 @@ EOF
 
 
 
-
+# Set up pylint
 cat << EOF > ".pylintrc"
 
 [MASTER]
@@ -856,3 +862,56 @@ EOF
 
 
 
+
+# Set up direnv
+cat << EOF > ".envrc" 
+
+layout python3
+if [ -f .gitignore ]; then
+    cat .gitignore | grep "^\.direnv$" > /dev/null
+    if [ "$?" -ne "0" ]; then
+        echo -en "\n#direnv stuff\n.direnv" >> .gitignore
+    fi
+
+    cat .gitignore | grep "^\.direnv/$" > /dev/null
+    if [ "$?" -ne "0" ]; then
+        echo -en "\n.direnv/" >> .gitignore
+    fi
+
+    cat .gitignore | grep "^\.direnv/\*$" > /dev/null
+    if [ "$?" -ne "0" ]; then
+        echo -en "\n.direnv/*" >> .gitignore
+    fi
+fi
+
+# Set up the virtual environment
+if [ -f setup.py ]; then
+    echo "Setting up project/environment from setup.py"
+	python3 -m pip install wheel
+	python3 -m pip install .
+else
+  if [ -f requirements.txt ]; then
+    echo "Setting up project/environment from requirements.txt"
+    python3 -m pip install -r requirements.txt --no-cache-dir --verbose --require-virtualenv
+  fi
+fi
+
+
+DOTENV_FILE=".env"
+if [ -f "${DOTENV_FILE}" ]; then
+    echo ""
+    echo "Using local $DOTENV_FILE to source additional environment variables ..."
+    which grep > /dev/null
+    if [ "$?" -eq "0" ]; then
+        which xargs > /dev/null
+        if [ "$?" -eq "0" ]; then
+            export $(grep -v '^#' ${DOTENV_FILE} | xargs)
+        else
+            echo "xargs not found in PATH. Cannot export \"${DOTENV_FILE}\""
+        fi
+    else
+        echo "grep not found in PATH. Cannot export \"${DOTENV_FILE}\""
+    fi
+fi
+
+EOF
