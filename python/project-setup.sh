@@ -1,33 +1,140 @@
 #!/bin/bash
 # Bash script to initialize a python project complete with setup.py
 
+#####################
+# This works
+#####################
+# cat << EOF > .envrc
+# export FOO=BAR;
+# EOF
+# direnv allow
+# exit 0
+#####################
+
+# Caller configures these
+PROJECT_NAME="my_project_name"
+PROJECT_VERSION_FILE="VERSION"
+PROJECT_VERSION="0.0.1"
+TEST_MODULE_NAME="tests"
+TEST_REQUIREMENTS_FILE="requirements-test.txt"
+REQUIREMENTS_FILE="requirements.txt"
+REPO_AUTHOR=$(whoami)
+PROJECT_MODULES=("foo" "bar" "baz")
+
+
+README_FILE="README.md"
+LICENSE_FILE="LICENSE"
+
+
 function make_python_module() {
-        local MODULE_PATH=${1:?"ERROR: no value specified for \$1 (MODULE_PATH)"}
-        mkdir -p "$MODULE_PATH" > /dev/null
-        pushd $MODULE_PATH
-            touch __init__.py
-            echo -e "\n\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()" > __main__.py
-        popd > /dev/null
+    echo "Creating python module $MODULE_PATH ..."
+    local MODULE_PATH=${1:?"ERROR: no value specified for \$1 (MODULE_PATH)"}
+    mkdir -p "$MODULE_PATH" && touch $_/__init__.py
+    echo "Done."
 }
 
-MODULES=()
 
-TEST_MODULE_NAME="tests"
+make_python_module "${TEST_MODULE_NAME}"
+pushd "${TEST_MODULE_NAME}" > /dev/null
+echo -e "import unittest\n\ndef main():\n\tprint(\"Running test suite...\")\n\tunittest.main()\n\nif __name__ == \"__main__\":\n\n\tmain()\n\n" > __main__.py
+popd
 
-touch requirements.txt
-touch requirements-test.txt
-touch README.md
 
+echo "${PROJECT_VERSION}" > "${PROJECT_VERSION_FILE}"
+for MODULE in ${PROJECT_MODULES[@]}; do
+    make_python_module "$MODULE"
+done
+
+
+echo "Creating ${REQUIREMENTS_FILE} ..."
+touch ${REQUIREMENTS_FILE}
+echo "Done."
+echo ""
+
+echo "Creating ${TEST_REQUIREMENTS_FILE} ..."
+touch ${TEST_REQUIREMENTS_FILE}
+echo "Done."
+echo ""
+
+echo "Creating ${README_FILE}"
+touch ${README_FILE}
+echo "Done."
+echo ""
+
+
+echo "Creating setup.py ..."
+cat << EOF > "setup.py"
+"""Python setup.py for ${PROJECT_NAME}"""
+import io
+import os
+from setuptools import find_packages, setup
+
+
+def read(*paths, **kwargs):
+    """Read the contents of a text file safely.
+    >>> read("${PROJECT_NAME}", "${PROJECT_VERSION_FILE}")
+    '${PROJECT_VERSION}'
+    >>> read("${README_FILE}")
+    ...
+    """
+
+    content = ""
+    with io.open(
+        os.path.join(os.path.dirname(__file__), *paths),
+        encoding=kwargs.get("encoding", "utf8"),
+    ) as open_file:
+        content = open_file.read().strip()
+    return content
+
+
+def read_requirements(path):
+    return [
+        line.strip()
+        for line in read(path).split("\n")
+        if not line.startswith(('"', "#", "-", "git+"))
+    ]
+
+
+setup(
+    
+    name="${PROJECT_NAME}",
+    version=read(".", "${PROJECT_VERSION_FILE}"),
+    description="Put your description here",
+    url="Put your description here",
+    long_description=read("${README_FILE}"),
+    long_description_content_type="text/markdown",
+    author="${REPO_AUTHOR}",
+    packages=find_packages(exclude=["${TEST_MODULE_NAME}"]),
+    install_requires=read_requirements("${REQUIREMENTS_FILE}"),
+    entry_points={
+        "console_scripts": [
+            "${TEST_MODULE_NAME} = ${TEST_MODULE_NAME}.__main__:main",
+            #"foo = foo.__main__:main"
+        ]
+    },
+    extras_require={
+        "${TEST_MODULE_NAME}": read_requirements("${TEST_REQUIREMENTS_FILE}")
+    },
+    setup_requires=['wheel']
+)
+
+EOF
+echo "Done."
+echo ""
 
 
 # Set up license file
-cat << EOF > "LICENSE" 
+echo "Creating ${LICENSE_FILE}"
+cat << EOF > "${LICENSE_FILE}" 
 Copyright (C) 2021 Rimot.io, Inc - All Rights Reserved
 Unauthorized copying, modifying, and/or distribution of this file, via any medium is strictly prohibited
 Proprietary and confidential
 EOF
+echo "Done."
+echo ""
 
 # Set up dockerignore
+echo "Creating .dockerignore ..."
 cat << EOF > ".dockerignore"
 .git/
 
@@ -46,9 +153,13 @@ __pycache__
 # Compiled Documentation
 docs/_build
 EOF
+echo "Done."
+echo ""
+
 
 
 # Set up gitignore
+echo "Creating .gitignore ..."
 cat << EOF > ".gitignore"
 # These are some examples of commonly ignored file patterns.
 # You should customize this list as applicable to your project.
@@ -284,14 +395,14 @@ cython_debug/
 # Environment-specific
 .vscode
 EOF
+echo "Done."
+echo ""
 
 
 
-
-
+echo "Creating .pylintrc ..."
 # Set up pylint
 cat << EOF > ".pylintrc"
-
 [MASTER]
 
 # A comma-separated list of package or module names from where C extensions may
@@ -859,13 +970,12 @@ valid-metaclass-classmethod-first-arg=cls
 overgeneral-exceptions=Exception
 
 EOF
-
-
+echo "Done."
+echo ""
 
 
 # Set up direnv
-cat << EOF > ".envrc" 
-
+cat <<- "EOF" > .envrc
 layout python3
 if [ -f .gitignore ]; then
     cat .gitignore | grep "^\.direnv$" > /dev/null
@@ -913,5 +1023,12 @@ if [ -f "${DOTENV_FILE}" ]; then
         echo "grep not found in PATH. Cannot export \"${DOTENV_FILE}\""
     fi
 fi
-
 EOF
+echo "Done."
+echo ""
+which direnv > /dev/null
+if [ "$?" -eq "0" ]; then
+    direnv allow
+else
+    echo "direnv not found in PATH. Not automatically setting up virtual environment for project ${PROJECT_NAME}"
+fi
