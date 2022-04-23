@@ -36,6 +36,19 @@ else
 fi
 
 
-if [ -f .env ]; then
-    export $(grep -v '^#' .env | xargs)
+DOTENV_FILE=".env"
+if [ -f "${DOTENV_FILE}" ]; then
+    echo ""
+    echo "Using local $DOTENV_FILE to source additional environment variables ..."
+    which grep > /dev/null
+    if [ "$?" -eq "0" ]; then
+        which xargs > /dev/null
+        if [ "$?" -eq "0" ]; then
+            export $(grep -v '^#' ${DOTENV_FILE} | xargs)
+        else
+            echo "xargs not found in PATH. Cannot export \"${DOTENV_FILE}\""
+        fi
+    else
+        echo "grep not found in PATH. Cannot export \"${DOTENV_FILE}\""
+    fi
 fi
