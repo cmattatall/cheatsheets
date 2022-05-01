@@ -1,0 +1,8 @@
+As of May 1, 2022, On ubuntu 18.04, and 20.04, gnome-terminal requires python3.8, 
+but the shell script has a shebang for #!/usr/bin/python3, so configuring update-alternatives
+for newer versions of python3 breaks the terminal.
+
+Solution is to change the shebang in /usr/bin/gnome-terminal to refer to the explicit version
+Replace #!/usr/bin/python3 -> #!/usr/bin/python3.8
+
+See: https://stackoverflow.com/questions/68784920/python-upgrading-leads-to-terminal-not-opening
