@@ -27,7 +27,8 @@ fi
 if [ -f setup.py ]; then
     echo "Setting up project/environment from setup.py"
 	python3 -m pip install wheel
-	python3 -m pip install .
+	#python3 -m pip install .
+	python3 setup.py develop
 else
   if [ -f requirements.txt ]; then
     echo "Setting up project/environment from requirements.txt"
