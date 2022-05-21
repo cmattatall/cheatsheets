@@ -5,4 +5,7 @@ for newer versions of python3 breaks the terminal.
 Solution is to change the shebang in /usr/bin/gnome-terminal to refer to the explicit version
 Replace #!/usr/bin/python3 -> #!/usr/bin/python3.8
 
+Then, do 
+sudo apt-get install python3-minimal
+
 See: https://stackoverflow.com/questions/68784920/python-upgrading-leads-to-terminal-not-opening
