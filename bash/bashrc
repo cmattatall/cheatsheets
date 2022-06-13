@@ -169,3 +169,33 @@ if [ "$?" -eq "0" ]; then
 	alias clipboard="xclip -selection clipboard"
 fi
 
+
+function cdk_python_env_init() {
+    dpkg --list | grep env | grep virtual | grep python | awk '{print $2}' > /dev/null
+    if [ "$?" -eq "0" ]; then
+        echo "Looking for cdk ... "
+        which cdk > /dev/null
+        if [ "$?" -eq "0" ]; then
+            $(which cdk) init app --language python
+            source .venv/bin/activate
+            if [ -f requirements.txt ]; then
+                python -m pip install -r requirements.txt
+                if [ "$?" -eq "0" ]; then
+                    echo "Ok."
+                else
+                    echo "Error installing python packages from requirements.txt"
+                fi
+            else
+                echo "No requirements.txt file found! Could not install python packages"
+            fi
+        else
+            echo "program \"cdk\" not found on disk, please install it first"
+        fi
+    else
+        echo "python3-virtualenv does not seem to be installed. Please install it first"
+    fi
+}
+
+
+
+alias "aws_whoami"="aws sts get-caller-identity | jq"
