@@ -23,5 +23,5 @@ git log --reverse --pretty=%H master \
 # CHECKOUT 1 COMMIT BACKWARDS
 
 ```sh
-git checkout HEAD^
+git checkout HEAD~
 ```
