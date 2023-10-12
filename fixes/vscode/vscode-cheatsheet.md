@@ -9,3 +9,6 @@ sudo mv Menlo*.tff /usr/share/fonts && \
 sudo fc-cache -fv  && \
 rm -r Menlo-for-Powerline
 ```
+
+**Then Restart Your Computer**
+
