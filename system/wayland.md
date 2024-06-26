@@ -7,3 +7,5 @@ screensharing is disabled in wayland. This can cause issues on certain
 builds of MS Teams
 
 change `WaylandEnable=true` or `WaylandEnable=false` in `/etc/gdm3/custom.conf`
+
+Then restart your computer
