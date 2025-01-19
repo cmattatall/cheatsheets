@@ -83,6 +83,8 @@ docker image prune -a
 ```
 
 
-
-
-
+# Copy files while excluding large directories such as node modules. You can use `find` + `du` to identify these in advance and then pass them to `xargs`
+sh
+```
+  rsync -rv --exclude=node_modules --exclude=env /projects /destination
+````
